@@ -40,14 +40,23 @@ def traj_ballistic2(dt, tf, x0):
     n = int(tf/dt) + 1
     t = np.linspace(0, tf, n)
 
-    y = integrate.solve_ivp(traj_dxdt_ballistic, (0, tf), x0, t_eval=t)
+    y = integrate.solve_ivp(traj_dxdt_ballistic, (0, tf), x0, events=[at_ground,apex], dense_output=True)
 
     return t, y
 
-x0 = np.array([0,0,0,1,2,15])
-t, y = traj_ballistic2(0.1, 2, x0)
+def at_ground(t, y):
+    return y[2]
+
+def apex(t, y):
+    return y[5]
+
+at_ground.terminal=True
+
+x0 = np.array([0,0,1,1,2,15])
+t, y = traj_ballistic2(0.1, 10, x0)
 print(y.t)
 print(y.y)
+
 
 dat = y.y
 px = dat[0, :]
