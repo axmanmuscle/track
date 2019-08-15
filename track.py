@@ -29,6 +29,9 @@ o = np.array([100,0,0])
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
+fig2 = plt.figure()
+ax2 = fig2.add_subplot(111)
+
 tf = y.t[-1]
 
 t = np.linspace(0, tf)
@@ -49,4 +52,7 @@ ax.set_zlabel('z')
 #ax.set_ylim([-10, 10])
 ax.scatter(o[0], o[1], o[2], c='b', marker='*')
 
+r,b,e = formObs_rbe(x, o)
+
+ax2.scatter(b*180/np.pi, e*180/np.pi, c=r, marker='.')
 plt.show()
