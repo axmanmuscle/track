@@ -49,3 +49,24 @@ def traj_boost(tf, x0):
     
     return y
     
+def formObs_rbe(x, o):
+    px = x[0] - o[0]
+    py = x[1] - o[1]
+    pz = x[2] - o[2]
+    r = np.sqrt(px*px + py*py + pz*pz)
+    b = np.arctan2(py, px)
+    e = np.arctan2(pz, np.sqrt(px*px + py*py))
+    return r,b,e
+
+def formObs_rbed(x, o):
+    px = x[0] - o[0]
+    py = x[1] - o[1]
+    pz = x[2] - o[2]
+    vx = x[3]
+    vy = x[4]
+    vz = x[5]
+    r = np.sqrt(px*px + py*py + pz*pz)
+    b = np.arctan2(py, px)
+    e = np.arctan2(pz, np.sqrt(px*px + py*py))
+    d = (px*vx + py*vy + pz*vz)/r
+    return r,b,e,d
