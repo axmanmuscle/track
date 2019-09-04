@@ -27,7 +27,7 @@ def traj_ballistic(tf, x0):
 
 def traj_dxdt_boost(t, x):
     gravity = c.gravity()
-    if t < 5:
+    if t < 1.5:
         thrust = 75
     else:
         thrust = 0

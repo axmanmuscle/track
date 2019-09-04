@@ -17,8 +17,10 @@ def sigmaPoints(x, P):
     mx = np.linalg.cholesky(n*P)
     
     for idx in range(n):
-        sigx[:, idx] = x + mx[idx, :]
-        sigx[:, idx+n] = x - mx[idx, :]
+#        sigx[:, idx] = x + mx[idx, :]
+#        sigx[:, idx+n] = x - mx[idx, :]
+        sigx[:, idx] = x + mx[:, idx]
+        sigx[:, idx+n] = x - mx[:, idx]
         
     return sigx
     

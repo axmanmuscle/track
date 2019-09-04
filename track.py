@@ -13,12 +13,13 @@ import ukf
 import traj
     
 x0 = np.array([0,0,1,30, 30, 30])
-y = traj.traj_ballistic(10, x0)
-o = np.array([100,0,0])
+#y = traj.traj_ballistic(10, x0)
+y = traj.traj_boost(10, x0)
+o = np.array([300,-200,0])
 
 tf = y.t[-1]
 
-t = np.linspace(0, tf)
+t = np.linspace(0, tf, 100)
 dt = t[1] - t[0]
 
 x = y.sol(t)
@@ -31,15 +32,15 @@ r, b, e, d = traj.formObs_rbed(x, o)
 
 ## Add noise to obs
 
-#sig_r = 0.05
-#sig_b = 0.001
-#sig_e = 0.004
-#sig_d = 0.001
+sig_r = 0.5
+sig_b = 0.01
+sig_e = 0.04
+sig_d = 0.01
 
-sig_r = 0
-sig_b = 0
-sig_e = 0
-sig_d = 0
+#sig_r = 0
+#sig_b = 0
+#sig_e = 0
+#sig_d = 0
 
 r_noise = np.random.normal(0, sig_r, len(r))
 b_noise = np.random.normal(0, sig_b, len(b))
@@ -100,7 +101,12 @@ for idx in range(1, len(t)):
     
     x_filt[:, idx] = xhat
     
-   
+filt_obs = np.zeros(obs.shape)    
+for idx in range(x_filt.shape[1]):
+    state = x_filt[:, idx]
+    s_obs = traj.formObs_rbed(state, o)
+    filt_obs[:, idx] = s_obs
+  
 ## plotting
 
 fig = plt.figure()
@@ -113,8 +119,14 @@ ax2 = fig2.add_subplot(111)
 fig3 = plt.figure()
 ax3 = fig3.add_subplot(111)
 
+fig4 = plt.figure()
+ax4 = fig4.add_subplot(111)
+
+fig5 = plt.figure()
+ax5 = fig5.add_subplot(111)
+
 ax.scatter(px, py, pz, c='r', marker='.')
-ax.scatter(x_filt[0,:],x_filt[1,:],x_filt[2,:],'b')
+ax.scatter(x_filt[0,:],x_filt[1,:],x_filt[2,:],'b*')
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.set_zlabel('z')
@@ -127,4 +139,12 @@ ax2.scatter(b*180/np.pi, e*180/np.pi, c=r, marker='.')
 ax2.set_title('Truth Obs')
 ax3.scatter(obs_b*180/np.pi, obs_e*180/np.pi, c=obs_r, marker='.')
 ax3.set_title('Noised Obs')
+
+ax4.scatter(obs_b*180/np.pi, obs_e*180/np.pi, c=obs_r, marker='.')
+ax4.scatter(filt_obs[1, :]*180/np.pi, filt_obs[2,:]*180/np.pi, c=filt_obs[0, :], marker='*')
+ax4.set_title('Noised Obs with Filtered Obs')
+
+ax5.scatter(b*180/np.pi, e*180/np.pi, c=r, marker='.')
+ax5.scatter(filt_obs[1, :]*180/np.pi, filt_obs[2,:]*180/np.pi, c=filt_obs[0, :], marker='*')
+ax5.set_title('Truth Obs with Filtered Obs')
 plt.show()
