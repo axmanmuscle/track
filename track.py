@@ -13,8 +13,8 @@ import ukf
 import traj
     
 x0 = np.array([0,0,1,30, 30, 30])
-y = traj.traj_ballistic(10, x0)
-#y = traj.traj_boost(25, x0)
+#y = traj.traj_ballistic(10, x0)
+y = traj.traj_boost(25, x0)
 o = np.array([300,-200,0])
 
 tf = y.t[-1]
